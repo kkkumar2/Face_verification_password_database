@@ -56,21 +56,22 @@ def fetch_image():
             out_msg.text_area("Logging: ", msg2, height=10)
             break
 
-def add_data():
-    for k, v in name_dict.items():
-        name_dict[k] = st.text_input(k, v)
-    if name_dict['Username'] != '':
-        username = name_dict['Username']
-        print(username)
-    if name_dict['Password'] != '':
-        password = name_dict['Password']  
-        print(password)
 
-def view_data():
+def view_data(data,category):
     pass
+
+def delete_data(data,category):
+    pass
+
+def save_data(head,username,password):
+    print("key is ",head)
+    print("username is ",username)
+    print("password is ",password)
+    
 
 def predict():
     print("prediction started")
+    st.session_state.score = 0
     metadata_path = os.path.join(os.getcwd(),'metadata')
     embed_path = os.path.join(metadata_path,'Embeddings.pkl')
     classname_path = os.path.join(metadata_path,'classname.pkl')
@@ -82,6 +83,7 @@ def predict():
     cap = cv2.VideoCapture(0)
     while True:
         _,frame = cap.read()
+        count+=1  
         rgb, boxes =  face_detector(count,frame)
         kEncodings = face_extractor(rgb, boxes,'predict') 
         
@@ -93,21 +95,53 @@ def predict():
         print(f"Cosine Similarity score is {score}")
 
         if max(score[0]) * 100 > 90:
-            add = st.button("Add",on_click=add_data)
-            view = st.button("View",on_click=view_data)
-        count+=1    
-        if count > 1:
-            break
+            st.session_state.score = 1
+
+        if count == 1:
+            break   
+
+### INITIATORS
+if 'score' not in st.session_state:
+    st.session_state['score'] = 0
+
+app_mode = st.sidebar.selectbox('Choose the App mode',
+['About App','Face Verification']
+)
+if app_mode =='About App':
+    pass
+
+elif app_mode == "Face Verification" and st.session_state.score == 0:
+    kEncodings = []; kNames = []
+    st.title("WEBCAM")
+    WINDOW = st.image([])
+    out_msg = st.empty()
+    input = st.text_input("Enter the name")
+    take = st.button("Take Images",on_click=fetch_image)
+    predp = st.button("Predict",on_click=predict)
 
 
-kEncodings = []; kNames = []
-st.title("WEBCAM")
-WINDOW = st.image([])
-input = st.text_input("Enter the name")
-take = st.button("Take Images",on_click=fetch_image)
-take = st.button("Predict",on_click=predict)
-out_msg = st.empty()
-name_dict = {"Username":"", "Password":""}
+
+if st.session_state.score != 0:
+    app_mode2 = st.sidebar.selectbox('Data',
+    ["Choose","Add","View","Delete"]
+    )
+
+    if app_mode2 == "Add":
+        with st.form(key="userdata",clear_on_submit=True):
+            head = st.text_input("what data you want to store")
+            username = st.text_input("Username")
+            password = st.text_input("Password")
+            st.form_submit_button("save",on_click=save_data,args=(head,username,password))
 
 
+    elif app_mode2 == "View":
+        data = ['choose','microsoft','ineuron','hdfc','View all']
+        category = st.selectbox("Enter the category to fetch",data)
+        st.button("View",on_click=view_data,args=(data,category))
+        
 
+    elif app_mode2 == "Delete":
+        data = ['choose','microsoft','ineuron','hdfc','Delete all']
+        category = st.selectbox("Enter the category to fetch",data)
+        st.button("Delete",on_click=delete_data,args=(data,category))
+        
