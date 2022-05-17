@@ -84,3 +84,9 @@ setup.py
 requirements.txt
 environmental.yml
 ```
+
+# important
+
+```bash
+NOTE : we are going to use streamlit with FASTAPI , streamlit as frontend and FASTAPI as backend (we can discuss this tmrw nyt i will create a little demo so that we can discuss more and finalize it)
+```
