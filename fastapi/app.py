@@ -29,7 +29,7 @@ class ClientImageInput(BaseModel):
 
 
 @app.get("/save_data_db")
-def save_data_db(data:ClientImageInput):
+def save_data_db(data:ClientImageInput,request:Request):
     since = time.time()
     print("Predict API hitted")
     print("data is",data.username)

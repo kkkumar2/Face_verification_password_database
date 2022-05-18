@@ -66,27 +66,54 @@ library ,
 ```bash
 structure :
 
-Data :
-	person folder name:
-		iamges
-
-src(package folder)
-	utils - folder
-	CRUD.py    for mongodb
-	predict.py  
-	feature_extractor.py
-	detect_Faces.py
-	encryption.py	 
+Data
+	metadata
 	
-streamlit.py 
-run.py
-setup.py
-requirements.txt
-environmental.yml
+streamlit
+	Dockerfile
+	requirements.txt
+	streamlit.py
+Fastapi 
+	Dockerfile
+	requirements.txt
+	app.py
+	utils
+		__init.py
+		encrypt.py
+		all_utils.py 
+	webapp
+		__init__.py
+		schema.py for validations
+		router
+			__init__.py
+			Database.py  route name : /database
+			face_controller.py  route name : /controller
+			
+	Face_recognition
+		__init__.py
+		Face_detector.py to detect face from webcam
+		validation.py   checking if user is already preesnet or not 
+		Feature_extract.py if not  present extract feature
+		
+docker-compose.yml
+.env
+README.md
+LICENSE
+
+
+
+
+
+verification(1 image)
+extract frame and detect faces and crop image
+pass crop image to model 
+compare it with pickle if present 
+close webcam
+
+webcam (10 images)
+extract frame and detect faces and crop image
+pass crop image to model 
+extract features store it in pickle file
+close webcam
 ```
 
-# important
-
-```bash
-NOTE : we are going to use streamlit with FASTAPI , streamlit as frontend and FASTAPI as backend (we can discuss this tmrw nyt i will create a little demo so that we can discuss more and finalize it)
-```
