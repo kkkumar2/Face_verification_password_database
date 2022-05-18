@@ -1,3 +1,4 @@
+from email.mime import application
 import streamlit as st
 import cv2 
 import os
@@ -7,6 +8,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import numpy as np
 from statistics import mean
+import requests
+import json
 
 def face_extractor(rgb, boxes,type='train'):
     encodings = face_recognition.face_encodings(rgb, boxes)
@@ -67,6 +70,27 @@ def save_data(head,username,password):
     print("key is ",head)
     print("username is ",username)
     print("password is ",password)
+
+    json_data={"username": username,"password": password,"key": head}
+    json_object = json.dumps(json_data) 
+    headers = {
+    "Content-type": "application/json",    
+    # "Content-type": "multipart/form-data",
+    "accept": "application/json"
+}
+
+    base_uri = "http://127.0.0.1:8080"
+    end_point1 = "save_data_db"
+#     r = requests.post('http://127.0.0.1:8080//save_data_db', json={
+#         "username": username,
+#         "password": password,
+#         "key": head
+# })
+    test_get_response = requests.get('http://127.0.0.1:8080/save_data_db',data=json_object, headers=headers, timeout=8000)
+    print(test_get_response,test_get_response.status_code)
+    # r = requests.post('http://127.0.0.1:8080/save_data_db', data=json_object, headers=headers, timeout=8000)
+
+    # print(f"Status Code: {r.status_code}, Response: {r.json()}")
     
 
 def predict():
